@@ -31,6 +31,6 @@ class spider():
 			result = self.__analysis(r_text)
 			now = time.asctime( time.localtime(time.time()) )
 			print("the price of " + k + " is:￥" + result + "      " + now)
-
+#test
 spider = spider()
 spider.go()
