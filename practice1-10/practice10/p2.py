@@ -1,0 +1,16 @@
+a = 'wakaka'
+a1 = a.ljust(20)
+a2 = a.rjust(20)
+a3 = a.center(20)
+print(a1)
+print(len(a1))
+print(a2)
+print(a3)
+
+a1 = format(a,'<20')
+a2 = format(a,'>20')
+a3 = format(a,'^20')
+print(a1)
+print(len(a1))
+print(a2)
+print(a3)
