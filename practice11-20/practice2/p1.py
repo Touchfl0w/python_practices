@@ -1,14 +1,24 @@
 import csv
 from urllib.request import urlretrieve
-
+import chardet
 #从网上下载csv文件
-url = 'http://quotes.money.163.com/service/chddata.html?code=1000001&start=20150104&end=20160108'
-urlretrieve(url,'pingan.csv')
+
 
 #使用csv模块读取csv文件
 #第一步打开文件
-with open('pingan.csv','rt') as f:
-	#reader是iterable，每次返回一行
-	reader = csv.reader()
-	print()
+def convert(file_name,new_file_name):
+	with open(file_name,'rt',encoding='GB2312') as f:
+		reader = csv.reader(f)
+		header = next(reader)
+		print(header)
+		with open(new_file_name,'wt',encoding='utf-8') as wf:
+			writer = csv.writer(wf)
+			writer.writerow(header)
+			for row in reader:
+				if row[0] > '2016-01-01' and int(row[11]) > 500000:
+					print(row)
+					writer.writerow(row)
 
+url = 'http://quotes.money.163.com/service/chddata.html?code=1000001&start=20150104&end=20160108'
+urlretrieve(url,'pingan.csv')
+convert('pingan.csv','pingan_result.csv')
