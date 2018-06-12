@@ -1,8 +1,7 @@
 import csv
+#python3中urlretrieve位置改变了
 from urllib.request import urlretrieve
 import chardet
-#从网上下载csv文件
-
 
 #使用csv模块读取csv文件
 #第一步打开文件
@@ -16,9 +15,10 @@ def convert(file_name,new_file_name):
 			writer.writerow(header)
 			for row in reader:
 				if row[0] > '2016-01-01' and int(row[11]) > 500000:
-					print(row)
 					writer.writerow(row)
+			print("*************end")
 
+#从网上下载csv文件
 url = 'http://quotes.money.163.com/service/chddata.html?code=1000001&start=20150104&end=20160108'
 urlretrieve(url,'pingan.csv')
 convert('pingan.csv','pingan_result.csv')
