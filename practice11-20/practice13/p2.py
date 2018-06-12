@@ -1,4 +1,4 @@
-with open('write.txt','wt',encoding='utf8')as wf:
+with open('write.txt','wt',encoding='utf-8')as wf:
 	#write参数是str,返回值为写入的byte数
 	print(wf.write('wakaka服装店'))
 	#查看方法

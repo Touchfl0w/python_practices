@@ -1,0 +1,6 @@
+f = open('1.txt','r+')
+# f.write('123')
+# print(f.tell())
+print(f.read())
+# print(f.tell())
+# f.close()
