@@ -22,7 +22,6 @@ class Wav():
 			rf.seek(44,0)
 			rf.readinto(self.myarray)
 
-	
 	def __print_header(self):
 		'''把header由bytes转化为Python数据类型并输出'''
 		Header = namedtuple('Header','NumChanels SampleRate BitsPerSample')
@@ -37,7 +36,6 @@ class Wav():
 		'''将wav文件音量调低'''
 		for i in range(self.myarray_length):
 			self.myarray[i] = int(self.myarray[i]/10)
-
 
 	def __save(self):
 		'''将修改的文件保存'''
