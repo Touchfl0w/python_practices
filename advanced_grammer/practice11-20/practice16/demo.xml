@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<data>
+	<country name="liechtenstein">
+		<rank updated="yes">5</rank>
+		<year>2008</year>
+		<gdp>141100</gdp>
+	</country>
+	<country name="china">
+		<rank updated="yes">2</rank>
+		<year>2010</year>
+		<gdp>1422000</gdp>
+	</country>
+	<country name="american">
+		<rank updated="no">1</rank>
+		<year>2010</year>
+		<gdp>3122000</gdp>
+	</country>
+</data>
