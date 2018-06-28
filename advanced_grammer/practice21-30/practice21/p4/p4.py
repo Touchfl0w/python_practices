@@ -3,6 +3,8 @@ import csv
 from xml.etree.ElementTree import ElementTree,Element
 from threading import Thread
 from queue import Queue
+from io import StringIO
+import requests
 
 class DownloadThread(Thread):
 	'''下载线程'''
@@ -12,15 +14,19 @@ class DownloadThread(Thread):
 		self.filename = 'demo{}'.format(str(sid))
 		self.queue = queue
 
-	def download(self,sid,filename):
+	def download(self,sid):
 		'''下载csv文件'''
-		url = 'http://quotes.money.163.com/service/chddata.html?code=%s&start=20150104&end=20160108' % str(sid)
-		response = urlretrieve(url,filename)
+		#变化3：使用rjust来调整字符串，使得sid只输入一到两位即可
+		url = 'http://quotes.money.163.com/service/chddata.html?code=1%s&start=20150104&end=20160108' % str(sid).rjust(6,'0')
+		response = requests.get(url)
+		#变化1：用类文件对象（内存对象）来存储csv字符串数据，而非文件
+		self.data = StringIO(response.text)
+		print(dir(self.data))
 
 	def run(self):
 		print("downloading %s :" % str(self.sid))
-		self.download(self.sid,self.filename)
-		self.queue.put(self.filename)
+		self.download(self.sid)
+		self.queue.put((self.sid,self.data))
 
 class ConvertThread(Thread):
 	'''转换现场'''
@@ -28,45 +34,42 @@ class ConvertThread(Thread):
 		Thread.__init__(self)
 		self.queue = queue
 
-	def convert(self,filename):
+	def convert(self,sid,data):
 		'''csv文件转换为xml文件'''
-		with open(filename,'rt',encoding='GB2312')as rf:
-			if rf:
-				reader = csv.reader(rf)
-				header = next(reader)
-				root = Element('data')
-				for row in reader:
-					line = Element('row')
-					root.append(line)
-					for key,value in zip(header,row):
-						e = Element(key)
-						e.text = value
-						line.append(e)
-			et = ElementTree(root)
-			et.write('%s.xml' % filename,encoding='utf-8')
+		#变化1：csv模块可直接使用stringio对象来获取reader
+		if data:
+			reader = csv.reader(data)
+			header = next(reader)
+			root = Element('data')
+			for row in reader:
+				line = Element('row')
+				root.append(line)
+				for key,value in zip(header,row):
+					e = Element(key)
+					e.text = value
+					line.append(e)
+		et = ElementTree(root)
+		et.write('1%s.xml' % str(sid).rjust(6,'0'),encoding='utf-8')
 
 	def run(self):
 		while True:
-			filename = self.queue.get()
-			if filename == False:
+			sid,data = self.queue.get()
+			if data == False:
 				break
-			print("converting %s :" % str(filename))
-			self.convert(filename)
+			print("converting %s :" % str(sid))
+			self.convert(sid,data)
 
 if __name__ == '__main__':
-	#线程使用队列通信
 	q = Queue()
-	threads = []
-	#创建并开启全部线程，包括9个下载线程和一个转换线程
-	for i in range(1000001,1000010):
-		t = DownloadThread(i,q)
-		threads.append(t)
-		t.start()
+	
+	#变化2：使用列表推导式代替for循环,简化代码
+	threads = [DownloadThread(i,q) for i in range(1,10)]
+	for thread in threads:
+		thread.start()
 	ct = ConvertThread(q)
 	ct.start()
-	#等待下载线程完毕，通知转换线程结束
 	for i in threads:
 		i.join()
-	q.put(False)
+	q.put((100,False))
 
 
