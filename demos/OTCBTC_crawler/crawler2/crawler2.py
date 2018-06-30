@@ -9,7 +9,7 @@ import smtplib
 from email.mime.text import MIMEText
 from email.utils import formataddr
 import schedule
-import time
+
 
 class RetrieveThread(Thread):
 	'''负责抓取某个币种当前最低价的线程'''
