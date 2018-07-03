@@ -1,15 +1,13 @@
-# Echo server program
 import socket
 
-HOST = ''                 # Symbolic name meaning all available interfaces
-PORT = 50007              # Arbitrary non-privileged port
-with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-    s.bind((HOST, PORT))
-    s.listen(1)
-    conn, addr = s.accept()
-    with conn:
-        print('Connected by', addr)
-        while True:
-            data = conn.recv(1024)
-            if not data: break
-            conn.sendall(data)
+def run_sockets(addr):
+	with socket.socket() as s:
+		s.connect(addr)
+		s.sendall(b'hello world')
+		data = s.recv(1024)
+		print(data)
+
+for i in range(7):
+	run_sockets(('127.0.0.1',12345))
+
+

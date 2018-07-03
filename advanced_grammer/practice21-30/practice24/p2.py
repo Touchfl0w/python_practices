@@ -1,23 +1,27 @@
-from socket import AF_INET, SOCK_STREAM, socket
+import socket
 from concurrent.futures import ThreadPoolExecutor
-def echo_client(sock, client_addr):
-	'''
-	Handle a client connection
-	'''
-	print('Got connection from', client_addr)
-	while True:
-		msg = sock.recv(1024)
-		if not msg:
-			break
-		sock.sendall(msg)
-	print('Client closed connection')
-	sock.close()
-def echo_server(addr):
-	pool = ThreadPoolExecutor(128)
-	sock = socket(AF_INET, SOCK_STREAM)
-	sock.bind(addr)
-	sock.listen(5)
-	while True:
-		client_sock, client_addr = sock.accept()
-		pool.submit(echo_client, client_sock, client_addr)
-echo_server(('',25002))
+
+HOST = 'localhost'
+PORT = 12345
+
+def handle_request(conn):
+	with conn as subsock:
+		while True:
+			data = subsock.recv(1024)
+			if not data:
+				break
+			subsock.sendall(data)
+
+def server(address):
+	pool = ThreadPoolExecutor(10)
+	ip,port = address
+	with socket.socket() as s:
+		s.bind(address)
+		s.listen(5)
+		while True:
+			conn,address = s.accept()
+			print('Client ' + ip + ":" + str(port) + ' connected')
+			pool.submit(handle_request,conn)
+
+server(('localhost',12345))
+
