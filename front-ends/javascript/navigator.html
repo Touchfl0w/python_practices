@@ -1,0 +1,33 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>无标题文档</title>
+</head>
+<script type="text/javascript">
+function validB(){ 
+var u_agent =       ; 
+var B_name="不是想用的主流浏览器!"; 
+if(u_agent.indexOf("Firefox")>-1){ 
+    B_name="Firefox"; 
+}else if(u_agent.indexOf("Chrome")>-1){ 
+    B_name="Chrome"; 
+}else if(u_agent.indexOf("MSIE")>-1&&u_agent.indexOf("Trident")>-1){ 
+    B_name="IE(8-10)";  
+}
+    document.write("浏览器:"+B_name+"<br>");
+    document.write("u_agent:"+u_agent+"<br>"); 
+}
+var browser_name = navigator.appName
+var b_version = navigator.appVersion
+var ua = navigator.userAgent
+document.write("browser naem:" + browser_name)
+document.write("<br />")
+document.write("browser version:" + b_version)
+document.write("<br />")
+document.write("user agent:" + ua)
+</script>
+<body>
+	<input type="button" value="info of browser" onclick="validB();" />
+</body>
+</html>
