@@ -19,6 +19,7 @@ def mail(sender,passwd,recievers):
 	return ret
 
 if __name__ == '__main__':
+	#详情见云笔记
 	my_sender = 'XXX@qq.com'
 	my_reciever = ['XXX@163.com']
 	my_passwd = 'XXXX' 
